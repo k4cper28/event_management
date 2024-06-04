@@ -1,10 +1,15 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
+module.exports = () => {
+    
+const connectionParams = {
+}
 
-mongoose.connect("mongodb+srv://root:root@kacper.pkzatkb.mongodb.net/?retryWrites=true&w=majority&appName=Kacper")
-    .then((result) => {
-        console.log("Połączono z bazą")
-    }).catch((err) => {
-        console.log("Nie można połączyć się z MongoDB. Błąd: " + err)
-    });
+try {
+    mongoose.connect(process.env.Mongo_URI, connectionParams)
+    console.log("Connected to database successfully")
+} catch (error) {
+    console.log(error);
+    console.log("Could not connect database!")
+}
 
-module.exports = mongoose;
+}
