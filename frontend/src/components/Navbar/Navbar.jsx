@@ -67,20 +67,7 @@ const Navbar = () => {
                             Explore Books
                         </Link>
                     </>
-                ) : 
-                
-                (
-                    <>
-                    <Link
-                        to="/login"
-                         className={cn("transition-colors hover:text-foreground", (location.pathname == "/login") ? "text-foreground [text-shadow:_0_0_15px_rgb(255_255_255_/_100%)]" : "text-muted-foreground")}
-                        // className="text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                        Login
-                    </Link>
-                    {/* Dodaj inne linki dla niezalogowanego użytkownika tutaj */}
-                    </>
-                )
+                ) : null
                 }
 
 
@@ -175,7 +162,28 @@ const Navbar = () => {
                             </Link>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                ) : null }
+                ) : 
+                (
+                    <>
+                    <Link
+                        to="/login"
+                         className={cn("transition-colors hover:text-foreground", (location.pathname == "/login") ? "text-foreground [text-shadow:_0_0_15px_rgb(255_255_255_/_100%)]" : "text-muted-foreground")}
+                        // className="text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                        Login
+                    </Link>
+
+                    <Link
+                        to="/register"
+                         className={cn("transition-colors hover:text-foreground", (location.pathname == "/register") ? "text-foreground [text-shadow:_0_0_15px_rgb(255_255_255_/_100%)]" : "text-muted-foreground")}
+                        // className="text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                        Register
+                    </Link>
+                    {/* Dodaj inne linki dla niezalogowanego użytkownika tutaj */}
+                    </>
+                )
+                 }
 
             </div>
 
