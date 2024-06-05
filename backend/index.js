@@ -1,14 +1,24 @@
-require('dotenv').config()
-const connection = require('./db')
-connection()
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const app = express();
 
+// Middleware
+app.use(express.json());
+app.use(cors());
 
-const express = require('express')
+// Database connection
+const connection = require('./db');
+connection();
 
-const app = express()
-const cors = require('cors')
-//middleware
-app.use(express.json())
-app.use(cors())
-const port = process.env.PORT || 8080
-app.listen(port, () => console.log(`Nasłuchiwanie na porcie ${port}`))
+// Route imports
+const userRoutes = require("./routes/users");
+const authRoutes = require("./routes/auth");
+
+// Route middleware
+app.use("/users", userRoutes);
+app.use("/auth", authRoutes);
+
+// Server setup
+const port = process.env.PORT || 8080;
+app.listen(port, () => console.log(`Nasłuchiwanie na porcie ${port}`));
