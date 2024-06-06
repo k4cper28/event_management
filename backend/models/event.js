@@ -48,12 +48,12 @@ const validate = (data) => {
     const schema = Joi.object({
     title: Joi.string().required().label("Title"),
     description: Joi.string().required().label("description"),
-    data: Joi.date().required().label("date"),
+    date: Joi.date().required().label("date"),
     location: Joi.string().required().label("location"),
     totalTickets: Joi.number().required().label("Total tickets"),
     availableTickets: Joi.number().required().label("Available tickets"),
     price: Joi.number().required().label("price"),
-    createdAt: Joi.date().required().label("Created At")
+
     })
     return schema.validate(data)
     }

@@ -1,18 +1,22 @@
 const jwt = require('jsonwebtoken');
 
 function authMiddleware(req, res, next) {
-  const token = req.header('Authorization');
+  // Pobranie tokenu z nagłówka
+  let token = req.headers["x-access-token"];
   if (!token) {
-    return res.status(401).send('Access denied. No token provided.');
+    return res.status(403).send({ message: "No token provided!" }); // Dodaj return
   }
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+  // Jeśli przesłano token - weryfikacja jego poprawności
+  jwt.verify(token, process.env.JWTPRIVATEKEY, (err, decodeduser) => {
+    if (err) {
+      console.log("Unauthorized!");
+      return res.status(401).send({ message: "Unauthorized!" }); // Dodaj return
+    }
+    console.log("Token poprawny, użytkownik: " + decodeduser._id);
+    req.user = decodeduser;
     next();
-  } catch (ex) {
-    res.status(400).send('Invalid token.');
-  }
+  });
 }
 
 module.exports = authMiddleware;
