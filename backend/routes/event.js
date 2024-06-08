@@ -30,4 +30,17 @@ router.post('/', authMiddleware, async (req, res) =>{
     }
 })
 
+router.get('/', authMiddleware, async (req, res) => {
+
+
+    try {
+    const events = await Event.find()
+    res.status(200).send(events);
+    } catch (error) {
+        res.status.send({ message: "Internal Server Error" })
+    }
+
+
+})
+
 module.exports = router;
