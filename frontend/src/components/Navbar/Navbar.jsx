@@ -39,7 +39,7 @@ const Navbar = () => {
         <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 w-full justify-between backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
                 <Link
-                    href="#"
+                    to="/"
                     className="flex items-center gap-2 text-lg font-semibold md:text-base"
                 >
                     <Icons.book className="h-8 w-8 fill-current" />
@@ -55,10 +55,10 @@ const Navbar = () => {
                             Home
                         </Link>
                         <Link
-                            to="/invoice-in"
+                            to="/events"
                             className={cn("transition-colors hover:text-foreground", (location.pathname == "/invoice-in") ? "text-foreground [text-shadow:_0_0_15px_rgb(255_255_255_/_100%)]" : "text-muted-foreground")}
                         >
-                            My Books
+                            Explore events
                         </Link>
                         <Link
                             to="/invoice-out"

@@ -5,6 +5,7 @@ import AuthOutlet from '@auth-kit/react-router/AuthOutlet'
 import ErrorPage from './pages/ErrorPage/ErrorPage';
 import Logout from './pages/Logout/Logout';
 import Register from './pages/Register/Register';
+import Event from './pages/Event/Event';
 
 const RoutesPage = () => {
   return (
@@ -13,12 +14,12 @@ const RoutesPage = () => {
         <Route exact path="/" element={<Home/>}/>
         <Route exact path="/login" element={<Login/>}/>
         <Route exact path="/register" element={<Register/>}/>
-
+        {/* <Route path='/events' element={<Event/>} /> */}
 
          {/* private */}
          <Route element={<AuthOutlet fallbackPath='/login' />}>
                     <Route path='/' element={<Home/>} />
-                    
+                    <Route path='/events' element={<Event/>} />
 
                     {/* <Route path='/profile/:userId' element={<Profile />} /> */}
                     <Route path='/logout' element={<Logout />} />
