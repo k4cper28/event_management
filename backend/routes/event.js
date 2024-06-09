@@ -43,4 +43,33 @@ router.get('/', authMiddleware, async (req, res) => {
 
 })
 
+
+// Update an event
+router.patch('/:id', authMiddleware, async (req, res) => {
+    try {
+        const { error } = validate(req.body);
+        if (error) return res.status(400).send({ message: error.details[0].message });
+
+        const event = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        if (!event) return res.status(404).send({ message: "Event not found" });
+
+        res.status(200).send({ message: "Event updated successfully", event });
+    } catch (error) {
+        res.status(500).send({ message: "Internal Server Error" });
+    }
+});
+
+
+// Delete an event
+router.delete('/:id', authMiddleware, async (req, res) => {
+    try {
+        const event = await Event.findByIdAndDelete(req.params.id);
+        if (!event) return res.status(404).send({ message: "Event not found" });
+
+        res.status(200).send({ message: "Event deleted successfully" });
+    } catch (error) {
+        res.status(500).send({ message: "Internal Server Error" });
+    }
+});
+
 module.exports = router;
