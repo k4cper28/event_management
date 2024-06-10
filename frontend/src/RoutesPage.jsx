@@ -6,6 +6,7 @@ import ErrorPage from './pages/ErrorPage/ErrorPage';
 import Logout from './pages/Logout/Logout';
 import Register from './pages/Register/Register';
 import Event from './pages/Event/Event';
+import EventDetails from './pages/EventDetails/EventDetails';
 
 const RoutesPage = () => {
   return (
@@ -20,7 +21,8 @@ const RoutesPage = () => {
          <Route element={<AuthOutlet fallbackPath='/login' />}>
                     <Route path='/' element={<Home/>} />
                     <Route path='/events' element={<Event/>} />
-
+                    <Route path="/event/:id" element={<EventDetails/>} />
+                    
                     {/* <Route path='/profile/:userId' element={<Profile />} /> */}
                     <Route path='/logout' element={<Logout />} />
                 </Route>

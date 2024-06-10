@@ -31,18 +31,28 @@ router.post('/', authMiddleware, async (req, res) =>{
 })
 
 router.get('/', authMiddleware, async (req, res) => {
-
-
     try {
     const events = await Event.find()
     res.status(200).send(events);
     } catch (error) {
         res.status.send({ message: "Internal Server Error" })
     }
-
-
 })
 
+router.get('/page', authMiddleware, async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = 10;
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+
+    try {
+        // Pobierz eventy z bazy danych
+        const events = await Event.find().skip(startIndex).limit(pageSize);
+        res.json(events);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
 
 // Update an event
 router.patch('/:id', authMiddleware, async (req, res) => {
