@@ -2,6 +2,7 @@ const router = require("express").Router();
 const {Event, validate} = require("../models/event");
 const express = require('express');
 const authMiddleware = require('../middleware/authMiddleware');
+const { Purchase } = require('../models/purchase')
 
 router.post('/', authMiddleware, async (req, res) =>{
 
@@ -38,6 +39,16 @@ router.get('/', authMiddleware, async (req, res) => {
         res.status.send({ message: "Internal Server Error" })
     }
 })
+
+router.get('/:id', authMiddleware, async (req, res) => {
+    try {
+        const event = await Event.findById(req.params.id);
+        if (!event) return res.status(404).send({ message: "Event not found" });
+        res.status(200).send(event);
+    } catch (error) {
+        res.status(500).send({ message: "Internal Server Error" });
+    }
+});
 
 router.get('/page', authMiddleware, async (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -77,6 +88,43 @@ router.delete('/:id', authMiddleware, async (req, res) => {
         if (!event) return res.status(404).send({ message: "Event not found" });
 
         res.status(200).send({ message: "Event deleted successfully" });
+    } catch (error) {
+        res.status(500).send({ message: "Internal Server Error" });
+    }
+});
+
+// Endpoint zakupu biletów
+router.patch('/buy/:id', authMiddleware, async (req, res) => {
+    const { tickets } = req.body;
+    const userId = req.user._id;  // Zakładam, że ID użytkownika jest w tokenie JWT
+
+    try {
+        // Znajdź wydarzenie po ID
+        const event = await Event.findById(req.params.id);
+
+        if (!event) {
+            return res.status(404).send({ message: "Event not found" });
+        }
+
+        // Sprawdź, czy wystarczy dostępnych biletów
+        if (event.availableTickets < tickets) {
+            return res.status(400).send({ message: "Not enough tickets available" });
+        }
+
+        // Zaktualizuj liczbę dostępnych biletów
+        event.availableTickets -= tickets;
+        await event.save();
+
+        // Zapisz dane o zakupie w bazie danych
+        const purchase = new Purchase({
+            eventId: event._id,
+            userId: userId,
+            tickets: tickets
+        });
+
+        await purchase.save();
+
+        res.status(200).send({ message: "Purchase successful", event, purchase });
     } catch (error) {
         res.status(500).send({ message: "Internal Server Error" });
     }

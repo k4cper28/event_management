@@ -7,6 +7,7 @@ import Logout from './pages/Logout/Logout';
 import Register from './pages/Register/Register';
 import Event from './pages/Event/Event';
 import EventDetails from './pages/EventDetails/EventDetails';
+import Ticket from './pages/Tickets/Tickets';
 
 const RoutesPage = () => {
   return (
@@ -22,7 +23,8 @@ const RoutesPage = () => {
                     <Route path='/' element={<Home/>} />
                     <Route path='/events' element={<Event/>} />
                     <Route path="/event/:id" element={<EventDetails/>} />
-                    
+                    <Route path="/tickets" element={<Ticket/>} />
+
                     {/* <Route path='/profile/:userId' element={<Profile />} /> */}
                     <Route path='/logout' element={<Logout />} />
                 </Route>

@@ -56,15 +56,15 @@ const Navbar = () => {
                         </Link>
                         <Link
                             to="/events"
-                            className={cn("transition-colors hover:text-foreground", (location.pathname == "/invoice-in") ? "text-foreground [text-shadow:_0_0_15px_rgb(255_255_255_/_100%)]" : "text-muted-foreground")}
+                            className={cn("transition-colors hover:text-foreground", (location.pathname == "/events") ? "text-foreground [text-shadow:_0_0_15px_rgb(255_255_255_/_100%)]" : "text-muted-foreground")}
                         >
                             Explore events
                         </Link>
                         <Link
-                            to="/invoice-out"
+                            to="/tickets"
                             className={cn("transition-colors hover:text-foreground", (location.pathname == "/invoice-out") ? "text-foreground [text-shadow:_0_0_15px_rgb(255_255_255_/_100%)]" : "text-muted-foreground")}
                         >
-                            Explore Books
+                            My tickets
                         </Link>
                     </>
                 ) : null
