@@ -80,7 +80,6 @@ function Event() {
             }
 
             const data = await response.json();
-            console.log('Dane pobrane:', data);
             setEvents(data);
             setTotalPages(data.totalPages);
         } catch (error) {
@@ -94,6 +93,7 @@ function Event() {
 
     return (
         <MainContainer>
+            <p className='mt-16 text-4xl font-bold'> Event List</p>
             <Card className='mt-16'>
                 
                 <CardContent>

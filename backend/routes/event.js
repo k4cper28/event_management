@@ -130,4 +130,16 @@ router.patch('/buy/:id', authMiddleware, async (req, res) => {
     }
 });
 
+router.put('/return/:id/:tickets', async (req, res) => {
+    try {
+        const eventId = req.params.id;
+        const tickets = req.params.tickets
+        await Event.findByIdAndUpdate(eventId, { $inc: { availableTickets: tickets } });
+        res.status(200).send('Liczba dostępnych biletów dla wydarzenia została zaktualizowana.');
+    } catch (error) {
+        console.error('Błąd podczas aktualizowania liczby dostępnych biletów dla wydarzenia:', error);
+        res.status(500).send('Wystąpił błąd podczas aktualizowania liczby dostępnych biletów dla wydarzenia.');
+    }
+});
+
 module.exports = router;

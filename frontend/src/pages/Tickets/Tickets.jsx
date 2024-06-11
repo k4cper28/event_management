@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import MainContainer from '@/components/MainContainer/MainContainer';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { toast } from 'react-toastify';
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from 'react-router-dom';
-// import moment from 'moment';
+
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 
 import {
     Table,
@@ -16,11 +25,6 @@ import {
 } from "@/components/ui/table";
 
 import {
-    Card,
-    CardContent,
-} from "@/components/ui/card";
-
-import {
     Pagination,
     PaginationContent,
     PaginationEllipsis,
@@ -28,7 +32,7 @@ import {
     PaginationLink,
     PaginationNext,
     PaginationPrevious,
-  } from "@/components/ui/pagination"
+} from "@/components/ui/pagination";
 import { Button } from '@/components/ui/button';
 
 function formatDate(dateTimeString) {
@@ -47,42 +51,63 @@ function formatDate(dateTimeString) {
   
     return `${formattedDay}-${formattedMonth}-${year} ${formattedHours}:${formattedMinutes}`;
   }
-  
 
 function Ticket() {
-    const [events, setEvents] = useState([]);
+    const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0);
+    const [error, setError] = useState(null);
+
     const authHeader = useAuthHeader();
     const token = authHeader.split(' ')[1];
-
-
     useEffect(() => {
-        fetchEvents();
-    }, [currentPage]);
+        fetchTickets();
+    }, []);
 
-    const fetchEvents = async () => {
+    const fetchTickets = async () => {
         setLoading(true);
-
+    
         try {
-            const response = await fetch(`http://localhost:8080/event`, {
+            const response = await fetch(`http://localhost:8080/ticket`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     'x-access-token': token,
                 },
             });
-
+    
             if (!response.ok) {
                 const errorText = await response.text();
                 throw new Error(errorText);
             }
-
+    
             const data = await response.json();
-            console.log('Dane pobrane:', data);
-            setEvents(data);
-            setTotalPages(data.totalPages);
+    
+            // Pobierz dane o wydarzeniach na podstawie identyfikatorów wydarzeń z biletów
+            const eventDataPromises = data.map(async (ticket) => {
+                const eventResponse = await fetch(`http://localhost:8080/event/${ticket.eventId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-access-token': token,
+                    },
+                });
+    
+                if (!eventResponse.ok) {
+                    throw new Error('Failed to fetch event data');
+                }
+    
+                const eventData = await eventResponse.json();
+    
+                // Zapisz dane o wydarzeniu w polu `event` biletu
+                ticket.event = eventData;
+    
+                return ticket;
+            });
+    
+            const updatedTickets = await Promise.all(eventDataPromises);
+    
+            // Po pobraniu danych o wydarzeniach zaktualizuj stan komponentu
+            setTickets(updatedTickets);
         } catch (error) {
             console.error('Błąd podczas pobierania danych:', error.message);
             toast.error('Ups! Coś poszło nie tak.');
@@ -90,23 +115,41 @@ function Ticket() {
             setLoading(false);
         }
     };
+
+
+    const handleReturnTicket = async (ticketId, eventId, tickets) => {
+        try {
+            // Usuń bilet
+            await axios.delete(`http://localhost:8080/ticket/${ticketId}`);
+            
+            // Zwiększ liczbę dostępnych biletów dla wydarzenia
+            await axios.put(`http://localhost:8080/event/return/${eventId}/${tickets}`);
     
+            // Odśwież listę biletów
+            fetchTickets();
+            
+            // Zaktualizuj stan komponentu lub wykonaj inne niezbędne akcje
+        } catch (error) {
+            console.error('Błąd podczas usuwania biletu:', error.message);
+            toast.error('Ups! Coś poszło nie tak.');
+        }
+    };
 
     return (
         <MainContainer>
+        
+        <p className='mt-16 text-4xl font-bold'> Ticket List</p>
             <Card className='mt-16'>
                 
                 <CardContent>
-                    <Table>
-                        <TableCaption>Lista wydarzeń</TableCaption>
+            <Table>
+                    <TableCaption>ticket list</TableCaption>
                         <TableHead>
                             <TableRow>
-                                <TableCell className="text-center w-[200px]">Title</TableCell>
-                                <TableCell className="text-center w-[300px]">Description</TableCell>
+                                <TableCell className="text-center w-[300px]">Title</TableCell>
                                 <TableCell className="text-center w-[200px]">Date</TableCell>
                                 <TableCell className="text-center w-[150px]">Location</TableCell>
-                                <TableCell className="text-center w-[135px]">Tickets available</TableCell>
-                                <TableCell className="text-center w-[135px]">Price</TableCell>
+                                <TableCell className="text-center w-[150px]">number of tickets</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -115,30 +158,28 @@ function Ticket() {
                                     
                                 </>
                             ) : (
-                                events.map(event => (
-                                    <TableRow  key={event._id}>
+                                
+                                tickets.map((ticket, index) => (
+                                    <TableRow key={`${ticket._id}-${index}`}>
                                         <TableRow>
-                                            <TableCell className='w-[200px] text-center'>{event.title}</TableCell>
-                                            <TableCell className='w-[300px] text-center text-wrap'>{event.description}</TableCell>
-                                            <TableCell  className='w-[200px] text-center'>{formatDate(event.date)}</TableCell>
-                                            <TableCell className='w-[150px] text-center'>{event.location}</TableCell>
-                                            <TableCell className='w-[150px] text-center'>{event.availableTickets  + "/" + event.totalTickets}</TableCell>
-                                            <TableCell className='w-[150px] text-center'>{event.price + "$"}</TableCell>
+                                            <TableCell className='w-[300px] text-center'>{ticket.event && ticket.event.title}</TableCell>
+                                            <TableCell className='w-[200px] text-center'>{ticket.event && formatDate(ticket.event.date)}</TableCell>
+                                            <TableCell className='w-[150px] text-center'>{ticket.event && ticket.event.location}</TableCell>
+                                            <TableCell className='w-[150px] text-center'>{ticket.event && ticket.tickets}</TableCell>
                                             <TableCell>
-                                                <Button>
-                                                    <Link to={`/event/${event._id}`}>preview</Link>
-                                                </Button>
+                                            <Button onClick={() => handleReturnTicket(ticket._id, ticket.eventId, ticket.tickets)}>Return</Button>
                                             </TableCell>
                                         </TableRow>
                                     </TableRow>
                                 ))
+
                             )}
                         </TableBody>
                     </Table>
                 </CardContent>
             </Card>
         </MainContainer>
-    );
+    );  
 }
 
 export default Ticket;
