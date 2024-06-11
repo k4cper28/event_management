@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MainContainer from '@/components/MainContainer/MainContainer';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
-import { toast } from 'react-toastify';
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from 'react-router-dom';
+import { useToast } from "@/components/ui/use-toast";
 
 import {
     Card,
@@ -56,6 +56,8 @@ function Ticket() {
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    const { toast } = useToast();
 
     const authHeader = useAuthHeader();
     const token = authHeader.split(' ')[1];
@@ -127,11 +129,19 @@ function Ticket() {
     
             // Odśwież listę biletów
             fetchTickets();
-            
-            // Zaktualizuj stan komponentu lub wykonaj inne niezbędne akcje
+    
+            // Dodaj toast
+            toast({
+                variant: "success",
+                title: "Ticket returned successfully"
+            });
         } catch (error) {
             console.error('Błąd podczas usuwania biletu:', error.message);
-            toast.error('Ups! Coś poszło nie tak.');
+            toast({
+                variant: "error",
+                title: "Oops! Something went wrong.",
+                description: "Failed to return ticket"
+            });
         }
     };
 

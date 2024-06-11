@@ -6,6 +6,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from 'react-router-dom';
 // import moment from 'moment';
 
+import { Icons } from "@/components/icons";
+
 import {
     Table,
     TableBody,
@@ -113,6 +115,7 @@ function Event() {
                             {loading ? (
                                 <>
                                     
+                                    
                                 </>
                             ) : (
                                 events.map(event => (
@@ -136,7 +139,16 @@ function Event() {
                         </TableBody>
                     </Table>
                 </CardContent>
+
+                {events && (events.length === 0) && !loading && 
+                    <div className="h-full flex flex-col justify-center items-center ">
+                        <Icons.noData className="h-[150px] w-full opacity-20"/>
+                        <h1 className="pb-2 mt-3 text-md font-semibold tracking-tight opacity-50 transition-colors text-center">No invoices to display</h1>
+                    </div>
+                }
             </Card>
+
+
         </MainContainer>
     );
 }

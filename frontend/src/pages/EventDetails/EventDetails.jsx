@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
-import { toast } from 'react-toastify';
 import MainContainer from '@/components/MainContainer/MainContainer';
+import { useToast } from "@/components/ui/use-toast";
 import {
     Card,
     CardContent,
@@ -21,10 +21,12 @@ function EventDetails() {
     const authHeader = useAuthHeader();
     const token = authHeader.split(' ')[1];
 
+    const { toast } = useToast();
+
+
     useEffect(() => {
         const fetchEventDetails = async () => {
             setLoading(true);
-
             try {
                 const response = await fetch(`http://localhost:8080/event/${id}`, {
                     method: 'GET',
@@ -89,10 +91,17 @@ function EventDetails() {
     
             const eventData = await updatedEvent.json();
             setEvent(eventData); // Ustaw zaktualizowane szczegóły wydarzenia
-            toast.success('Pomyślnie zakupiono bilety.');
+            toast({
+                variant: "success",
+                title: "Tickets purchased successfully"
+            });
+            
         } catch (error) {
             console.error('Błąd podczas zakupu biletów:', error.message);
-            toast.error('Ups! Coś poszło nie tak.');
+            toast({
+                variant: "error",
+                title: "Oops! Something went wrong."
+            });
         }
     };
 
