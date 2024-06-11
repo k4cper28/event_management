@@ -123,13 +123,13 @@ const Navbar = () => {
             <div className="flex items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
                 { isAuthenticated &&  
 
-                <Link to="/create-invoice">
+                <Link to="/create-event">
                     <Button className="gap-1 px-3 group relative inline-flex items-center justify-center overflow-hidden rounded-md font-medium ">
                         <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(100%)]">
                             <div className="relative h-full w-8 bg-secondary/20"></div>
                         </div>
                         <PlusIcon className="" />
-                        <p className="hidden sm:flex">Create invoice</p>
+                        <p className="hidden sm:flex">Create event</p>
                     </Button>
                 </Link>
             }
