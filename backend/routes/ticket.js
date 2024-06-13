@@ -9,6 +9,7 @@ router.get('/', authMiddleware, async (req, res) => {
         const userId = req.user._id; // Assuming the authenticated user's ID is available in req.user.id
         console.log(userId);
         const purchases = await Purchase.find({ userId });
+        console.log(purchases)
         if (!purchases.length) return res.status(404).send({ message: "Tickets not found" });
         res.status(200).send(purchases);
     } catch (error) {

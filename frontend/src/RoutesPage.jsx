@@ -9,6 +9,8 @@ import Event from './pages/Event/Event';
 import EventDetails from './pages/EventDetails/EventDetails';
 import Ticket from './pages/Tickets/Tickets';
 import CreateEvent from './pages/CreateEvent/CreateEvent';
+import MyEvents from './pages/MyEvents/MyEvents';
+import EditEvent from './pages/EditEvent/EditEvent';
 
 const RoutesPage = () => {
   return (
@@ -26,6 +28,8 @@ const RoutesPage = () => {
                     <Route path="/event/:id" element={<EventDetails/>} />
                     <Route path="/tickets" element={<Ticket/>} />
                     <Route path='/create-event' element={<CreateEvent/>} />
+                    <Route path='/my-events' element={<MyEvents/>} />
+                    <Route path='/event/edit/:id' element={<EditEvent/>} />
 
                     {/* <Route path='/profile/:userId' element={<Profile />} /> */}
                     <Route path='/logout' element={<Logout />} />

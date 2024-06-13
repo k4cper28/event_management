@@ -28,7 +28,7 @@ function EventDetails() {
         const fetchEventDetails = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`http://localhost:8080/event/${id}`, {
+                const response = await fetch(`http://localhost:8080/event/event-by-id/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

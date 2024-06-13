@@ -52,7 +52,7 @@ function formatDate(dateTimeString) {
   }
   
 
-function Event() {
+function  MyEvents() {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
@@ -69,7 +69,7 @@ function Event() {
         setLoading(true);
 
         try {
-            const response = await fetch(`http://localhost:8080/event`, {
+            const response = await fetch(`http://localhost:8080/event/userEvent`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -96,12 +96,12 @@ function Event() {
 
     return (
         <MainContainer>
-            <p className='mt-16 text-4xl font-bold'> Event List</p>
+            <p className='mt-16 text-4xl font-bold'>My Event List</p>
             <Card className='mt-16'>
                 
                 <CardContent>
                     <Table>
-                        <TableCaption>Lista wydarzeń</TableCaption>
+                        <TableCaption>My events list</TableCaption>
                         <TableHead>
                             <TableRow>
                                 <TableCell className="text-center w-[200px]">Title</TableCell>
@@ -130,7 +130,7 @@ function Event() {
                                             <TableCell className='w-[150px] text-center'>{event.price + "$"}</TableCell>
                                             <TableCell>
                                                 <Button>
-                                                    <Link to={`/event/${event._id}`}>preview</Link>
+                                                    <Link to={`/event/edit/${event._id}`}>Edit</Link>
                                                 </Button>
                                             </TableCell>
                                         </TableRow>
@@ -154,4 +154,4 @@ function Event() {
     );
 }
 
-export default Event;
+export default MyEvents;

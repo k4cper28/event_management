@@ -13,6 +13,7 @@ import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { useState, useEffect } from "react";
+import DatePicker from 'react-datepicker';
 
 import {
     CalendarIcon
@@ -43,6 +44,13 @@ function CreateEvent() {
     const navigate = useNavigate();
     const { toast } = useToast();
 
+    const modifyDate = (date, hours, minutes) => {
+        const modifiedDate = new Date(date); // Tworzymy nowy obiekt Date, aby nie zmieniać oryginalnej daty
+        modifiedDate.setHours(hours);
+        modifiedDate.setMinutes(minutes);
+        return modifiedDate;
+      };
+
     const [selectedDate, setSelectedDate] = useState(null);
 
     const {
@@ -69,7 +77,9 @@ function CreateEvent() {
                     location: values.location,
                     totalTickets: values.totalTickets,
                     availableTickets: values.totalTickets,
-                    price: values.price
+                    price: values.price,
+                    // userId: 
+
                 }),
             })
             .then(response => {
@@ -154,11 +164,11 @@ function CreateEvent() {
                             </div>
 
                               <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="Date" className={cn(errors.Date ? "text-red-500" : "text-foreground")}>Date</Label>
+                              <Label htmlFor="Date" className={cn(errors.Date ? "text-red-500" : "text-foreground")}>Date</Label>
                             <Controller
                                 control={control}
                                 name='Date'
-                                rules={{ required: "Due date is required" }}
+                                rules={{ required: "Date is required" }}
                                 render={({ field: { onChange, value } }) => (
                                     <Popover>
                                         <PopoverTrigger asChild>
@@ -184,7 +194,7 @@ function CreateEvent() {
                                 )}
                             />
                             <p className="text-red-500 h-4 text-xs">{errors.Date && errors.Date.message}</p>
-                        </div>          
+                        </div>       
                         <div className="flex flex-col space-y-1.5">
                             <Label htmlFor="location" className={cn(errors.location ? "text-red-500" : "text-foreground")}>Location</Label>
                                 <Input

@@ -66,6 +66,12 @@ const Navbar = () => {
                         >
                             My tickets
                         </Link>
+                        <Link
+                            to="/my-events"
+                            className={cn("transition-colors hover:text-foreground", (location.pathname == "/my-events") ? "text-foreground [text-shadow:_0_0_15px_rgb(255_255_255_/_100%)]" : "text-muted-foreground")}
+                        >
+                            My events
+                        </Link>
                     </>
                 ) : null
                 }
@@ -97,24 +103,31 @@ const Navbar = () => {
                                 <span className="sr-only">Acme Inc</span>
                             </Link>
                             <Link
-                                to="/"
-                                className={cn("transition-colors hover:text-foreground", (location.pathname == "/") ? "text-foreground [text-shadow:_0_0_15px_rgb(255_255_255_/_100%)]" : "text-muted-foreground")}
-                                // className="text-muted-foreground transition-colors hover:text-foreground"
-                            >
-                                Dashboard
-                            </Link>
-                            <Link
-                                to="/invoice-in"
-                                className={cn("transition-colors hover:text-foreground", (location.pathname == "/invoice-in") ? "text-foreground [text-shadow:_0_0_15px_rgb(255_255_255_/_100%)]" : "text-muted-foreground")}
-                            >
-                                Invoice in
-                            </Link>
-                            <Link
-                                to="/invoice-out"
-                                className={cn("transition-colors hover:text-foreground", (location.pathname == "/invoice-out") ? "text-foreground [text-shadow:_0_0_15px_rgb(255_255_255_/_100%)]" : "text-muted-foreground")}
-                            >
-                                Invoice out
-                            </Link>
+                            to="/"
+                            className={cn("transition-colors hover:text-foreground", (location.pathname == "/") ? "text-foreground [text-shadow:_0_0_15px_rgb(255_255_255_/_100%)]" : "text-muted-foreground")}
+                            // className="text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                            Home
+                        </Link>
+                        <Link
+                            to="/events"
+                            className={cn("transition-colors hover:text-foreground", (location.pathname == "/events") ? "text-foreground [text-shadow:_0_0_15px_rgb(255_255_255_/_100%)]" : "text-muted-foreground")}
+                        >
+                            Explore events
+                        </Link>
+                        <Link
+                            to="/tickets"
+                            className={cn("transition-colors hover:text-foreground", (location.pathname == "/invoice-out") ? "text-foreground [text-shadow:_0_0_15px_rgb(255_255_255_/_100%)]" : "text-muted-foreground")}
+                        >
+                            My tickets
+                        </Link>
+                        <Link
+                            to="/my-events"
+                            className={cn("transition-colors hover:text-foreground", (location.pathname == "/my-events") ? "text-foreground [text-shadow:_0_0_15px_rgb(255_255_255_/_100%)]" : "text-muted-foreground")}
+                        >
+                            My events
+                        </Link>
+                            
                         </nav>
                     </SheetContent>
                 </Sheet>

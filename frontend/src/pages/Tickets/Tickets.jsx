@@ -78,46 +78,47 @@ function Ticket() {
             });
     
             if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText);
+                throw new Error('Nie udało się pobrać danych o biletach');
             }
     
             const data = await response.json();
     
-            // Pobierz dane o wydarzeniach na podstawie identyfikatorów wydarzeń z biletów
             const eventDataPromises = data.map(async (ticket) => {
-                const eventResponse = await fetch(`http://localhost:8080/event/${ticket.eventId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-access-token': token,
-                    },
-                });
+                try {
+                    const eventResponse = await fetch(`http://localhost:8080/event/event-by-id/${ticket.eventId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-access-token': token,
+                        },
+                    });
     
-                if (!eventResponse.ok) {
-                    throw new Error('Failed to fetch event data');
+                    if (!eventResponse.ok) {
+                        throw new Error('Nie udało się pobrać danych o wydarzeniu');
+                    }
+    
+                    const eventData = await eventResponse.json();
+    
+                    ticket.event = eventData;
+    
+                    console.log(ticket.event)
+                
+                    return ticket;
+                } catch (error) {
+                    console.error('Błąd podczas pobierania danych o wydarzeniu:', error.message);
+                    throw error; // Rzucenie ponownie, aby obsłużyć go w zewnętrznym bloku catch
                 }
-    
-                const eventData = await eventResponse.json();
-    
-                // Zapisz dane o wydarzeniu w polu `event` biletu
-                ticket.event = eventData;
-    
-                return ticket;
             });
     
             const updatedTickets = await Promise.all(eventDataPromises);
-    
-            // Po pobraniu danych o wydarzeniach zaktualizuj stan komponentu
             setTickets(updatedTickets);
         } catch (error) {
-            console.error('Błąd podczas pobierania danych:', error.message);
-            toast.error('Ups! Coś poszło nie tak.');
+            console.error('Błąd podczas pobierania danych o biletach:', error.message);
+            toast.error('Nie udało się pobrać danych o biletach');
         } finally {
             setLoading(false);
         }
     };
-
 
     const handleReturnTicket = async (ticketId, eventId, tickets) => {
         try {

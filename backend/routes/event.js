@@ -6,11 +6,15 @@ const { Purchase } = require('../models/purchase')
 
 router.post('/', authMiddleware, async (req, res) =>{
 
+    console.log(req.user._id);
+
     try {
         const { error } = validate(req.body);
+    
 
         if (error)
             return res.status(400).send({ message: error.details[0].message });
+
 
         const event = new Event({
             title: req.body.title,
@@ -20,7 +24,8 @@ router.post('/', authMiddleware, async (req, res) =>{
             totalTickets: req.body.totalTickets,
             availableTickets: req.body.availableTickets,
             price: req.body.price,
-            createdAt: req.body.createdAt
+            createdAt: req.body.createdAt,
+            userId: req.user._id
         });
         
         await event.save();
@@ -40,7 +45,7 @@ router.get('/', authMiddleware, async (req, res) => {
     }
 })
 
-router.get('/:id', authMiddleware, async (req, res) => {
+router.get('/event-by-id/:id', authMiddleware, async (req, res) => {
     try {
         const event = await Event.findById(req.params.id);
         if (!event) return res.status(404).send({ message: "Event not found" });
@@ -66,7 +71,7 @@ router.get('/page', authMiddleware, async (req, res) => {
 });
 
 // Update an event
-router.patch('/:id', authMiddleware, async (req, res) => {
+router.patch('/edit/:id', authMiddleware, async (req, res) => {
     try {
         const { error } = validate(req.body);
         if (error) return res.status(400).send({ message: error.details[0].message });
@@ -106,6 +111,11 @@ router.patch('/buy/:id', authMiddleware, async (req, res) => {
             return res.status(404).send({ message: "Event not found" });
         }
 
+        // Sprawdź, czy użytkownik próbuje kupić bilet na swoje własne wydarzenie
+        if (event.userId.equals(userId)) {
+            return res.status(400).send({ message: "You cannot buy tickets for your own event" });
+        }
+
         // Sprawdź, czy wystarczy dostępnych biletów
         if (event.availableTickets < tickets) {
             return res.status(400).send({ message: "Not enough tickets available" });
@@ -115,6 +125,7 @@ router.patch('/buy/:id', authMiddleware, async (req, res) => {
         event.availableTickets -= tickets;
         await event.save();
 
+        
         // Zapisz dane o zakupie w bazie danych
         const purchase = new Purchase({
             eventId: event._id,
@@ -139,6 +150,29 @@ router.put('/return/:id/:tickets', async (req, res) => {
     } catch (error) {
         console.error('Błąd podczas aktualizowania liczby dostępnych biletów dla wydarzenia:', error);
         res.status(500).send('Wystąpił błąd podczas aktualizowania liczby dostępnych biletów dla wydarzenia.');
+    }
+});
+
+router.get('/userEvent', authMiddleware, async (req, res) => {
+    console.log(req.user._id);
+
+    try {
+        const events = await Event.find({ userId: req.user._id });
+        res.status(200).send(events);
+    } catch (error) {
+        console.error('Błąd podczas aktualizowania eventow:', error);
+        res.status(500).send({ message: "Internal Server Error" });
+    }
+});
+
+
+router.get('/elo/elo', authMiddleware, async (req, res) => {
+    try {   
+        const event = await Event.findById({ userId: req.user._id });
+        if (!event) return res.status(404).send({ message: "Event not found" });
+        res.status(200).send(event);
+    } catch (error) {
+        res.status(500).send({ message: "Internal Server Error" });
     }
 });
 
