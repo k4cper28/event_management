@@ -69,6 +69,27 @@ Open your browser and go to http://localhost:5173.
 
 Contributions are welcome! Please open an issue or submit a pull request for any bugs or improvements.
 
+## App view
+
+### Login view
+![image](https://github.com/k4cper28/event_management/assets/103234523/3674bbc4-80ec-4d2a-b507-f752cd5197fb)
+
+### Register view
+![image](https://github.com/k4cper28/event_management/assets/103234523/4b43735b-57dc-4f02-8973-94d612069740)
+
+### Event List view
+![image](https://github.com/k4cper28/event_management/assets/103234523/b1b24aef-9de2-48ed-af5e-87be3f33f061)
+
+### My tickets View
+![image](https://github.com/k4cper28/event_management/assets/103234523/f64e4da1-3cc9-4a25-a4cf-a636b86f2797)
+
+### Edit event View
+![image](https://github.com/k4cper28/event_management/assets/103234523/39dfeca8-adc2-4977-ae88-f8e1850c33f6)
+
+### Create event view
+![image](https://github.com/k4cper28/event_management/assets/103234523/e7c986e9-186b-4df9-84bf-f33e6e2e17da)
+
+
 ## License
 
 This project is licensed under the MIT License.
